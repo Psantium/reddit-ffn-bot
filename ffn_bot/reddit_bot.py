@@ -6,6 +6,7 @@ import praw
 from ffn_bot.commentlist import CommentList
 from ffn_bot.commentparser import formulate_reply, parse_context_markers
 from ffn_bot.commentparser import get_direct_links
+from ffn_bot.commentparser import StoryLimitExceeded
 from ffn_bot import bot_tools
 
 # For pretty text
@@ -320,17 +321,16 @@ def make_reply(body, id, reply_func, markers=None, additions=()):
     """Makes a reply for the given comment."""
     try:
         reply = list(formulate_reply(body, markers, additions))
-    except LookupError:
+    except StoryLimitExceeded:
         if not DRY_RUN:
             reply_func("You requested too many fics.\n"
                        "\nWe allow a maximum of 30 stories")
+        bot_tools.print_exception(level=logging.DEBUG)
         print("Too many fics...")
         return
 
     raw_reply = "".join(reply)
-    if not raw_reply:
-        print("Empty reply!")
-    elif len(raw_reply) > 10:
+    if len(raw_reply) > 10:
         print(
             "Writing reply to", id,
             "(", len(raw_reply), "characters in", len(reply), "messages)"
