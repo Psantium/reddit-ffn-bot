@@ -3,7 +3,7 @@
 # FanFiction Bot for Reddit
 This bot was made to allow reddit users to automatically get
 their responses, requests and promotions linked with the title,
-author and metadata of the story.
+author, metadata and an ePUB download of the story.
 
 ## Features
 * Direct Parsing of Links
